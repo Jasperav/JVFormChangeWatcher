@@ -1,0 +1,16 @@
+PODS:
+  - JVFormChangeWatcher (0.1.0)
+
+DEPENDENCIES:
+  - JVFormChangeWatcher (from `../`)
+
+EXTERNAL SOURCES:
+  JVFormChangeWatcher:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  JVFormChangeWatcher: be9af3d72e4df858690d56da51b913c09d3d114a
+
+PODFILE CHECKSUM: 0b53799b48e4188eb493c88aedb4ff2402583053
+
+COCOAPODS: 1.6.0.beta.1

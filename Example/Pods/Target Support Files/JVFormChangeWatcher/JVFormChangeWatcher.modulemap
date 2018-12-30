@@ -1,0 +1,6 @@
+framework module JVFormChangeWatcher {
+  umbrella header "JVFormChangeWatcher-umbrella.h"
+
+  export *
+  module * { export * }
+}

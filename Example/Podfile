@@ -1,0 +1,6 @@
+use_frameworks!
+target 'JVFormChangeWatcher_Tests' do
+  pod 'JVFormChangeWatcher', :path => '../'
+  
+  
+end
