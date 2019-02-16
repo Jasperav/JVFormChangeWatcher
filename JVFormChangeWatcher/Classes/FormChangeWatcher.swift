@@ -38,6 +38,7 @@ public class FormChangeWatcher<T: ChangeableForm, U: UIViewController> {
         self.topRightButtonState = topRightButtonState
         
         assert(viewController.navigationItem.rightBarButtonItem == nil, "There is already a right bar button item.")
+        assert(changeableForm.isValid())
         
         topLeftBarButtonItem = UIBarButtonItem(title: topLeftButtonTitle, style: .plain, target: self, action: #selector(resetValues))
         topRightBarButtonItem = UIBarButtonItem(title: topLeftButtonTitle, style: .plain, target: self, action: #selector(_tappedTopRightButton))
