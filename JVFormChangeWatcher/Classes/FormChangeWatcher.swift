@@ -23,11 +23,8 @@ public class FormChangeWatcher<T: ChangeableForm, U: UIViewController> {
     
     public init(changeableForm: T,
                 viewController: U,
-                topRightButtonText: String,
-                topLeftButtonTextWhenFormIsChanged: String?,
-                topRightButtonState: FormChangeWatcherTopRightButtonState,
-                topLeftButtonTitle: String = FormChangeWatcherDefaultValues.defaultTopLeftButtonText,
-                topRightButtonTitle: String = FormChangeWatcherDefaultValues.defaultTopRightButtonText,
+                topRightButtonText: String = FormChangeWatcherDefaultValues.defaultTopRightButtonText,
+                topLeftButtonTextWhenFormIsChanged: String? = FormChangeWatcherDefaultValues.defaultTopLeftButtonText,
                 tappedTopRightButton: @escaping (() -> ())) {
         self.changeableForm = changeableForm
         self.viewController = viewController
@@ -35,13 +32,13 @@ public class FormChangeWatcher<T: ChangeableForm, U: UIViewController> {
         self.topRightButtonText = topRightButtonText
         self.topLeftButtonTextWhenFormIsChanged = topLeftButtonTextWhenFormIsChanged
         self.startedTopLeftButton = viewController.navigationItem.leftBarButtonItem
-        self.topRightButtonState = topRightButtonState
+        self.topRightButtonState = topLeftButtonTextWhenFormIsChanged == nil ? .disabledWhenFormIsInvalid : .hiddenWhenFormIsNotChanged
         
         assert(viewController.navigationItem.rightBarButtonItem == nil, "There is already a right bar button item.")
         assert(changeableForm.isValid())
         
-        topLeftBarButtonItem = UIBarButtonItem(title: topLeftButtonTitle, style: .plain, target: self, action: #selector(resetValues))
-        topRightBarButtonItem = UIBarButtonItem(title: topLeftButtonTitle, style: .plain, target: self, action: #selector(_tappedTopRightButton))
+        topLeftBarButtonItem = UIBarButtonItem(title: topLeftButtonTextWhenFormIsChanged, style: .plain, target: self, action: #selector(resetValues))
+        topRightBarButtonItem = UIBarButtonItem(title: topRightButtonText, style: .plain, target: self, action: #selector(_tappedTopRightButton))
         
         switch topRightButtonState {
         case .disabledWhenFormIsInvalid:
