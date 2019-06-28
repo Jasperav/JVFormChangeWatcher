@@ -14,9 +14,9 @@ public class FormChangeWatcher<T: ChangeableForm, U: UIViewController> {
     
     @objc private let tappedTopRightButton: (() -> ())
     
-    private let topRightButtonText: String
     private let topLeftButtonTextWhenFormIsChanged: String?
     private let startedTopLeftButton: UIBarButtonItem?
+    private let startedTopRightButton: UIBarButtonItem?
     private let topRightButtonState: FormChangeWatcherTopRightButtonState
     private var topLeftBarButtonItem: UIBarButtonItem!
     private var topRightBarButtonItem: UIBarButtonItem!
@@ -29,12 +29,11 @@ public class FormChangeWatcher<T: ChangeableForm, U: UIViewController> {
         self.changeableForm = changeableForm
         self.viewController = viewController
         self.tappedTopRightButton = tappedTopRightButton
-        self.topRightButtonText = topRightButtonText
         self.topLeftButtonTextWhenFormIsChanged = topLeftButtonTextWhenFormIsChanged
         self.startedTopLeftButton = viewController.navigationItem.leftBarButtonItem
+        self.startedTopRightButton = viewController.navigationItem.rightBarButtonItem
         self.topRightButtonState = topLeftButtonTextWhenFormIsChanged == nil ? .disabledWhenFormIsInvalid : .hiddenWhenFormIsNotChanged
         
-        assert(viewController.navigationItem.rightBarButtonItem == nil, "There is already a right bar button item.")
         assert(changeableForm.isValid())
         
         topLeftBarButtonItem = UIBarButtonItem(title: topLeftButtonTextWhenFormIsChanged, style: .plain, target: self, action: #selector(resetValues))
@@ -42,6 +41,8 @@ public class FormChangeWatcher<T: ChangeableForm, U: UIViewController> {
         
         switch topRightButtonState {
         case .disabledWhenFormIsInvalid:
+            assert(viewController.navigationItem.rightBarButtonItem == nil, "There is already a right bar button item.")
+            
             showTopRightButton()
             updateTopRightButtonState()
         case .hiddenWhenFormIsNotChanged:
@@ -77,15 +78,23 @@ public class FormChangeWatcher<T: ChangeableForm, U: UIViewController> {
         hideTopLeftButton()
         hideTopRightButton()
         
-       changeableForm.resetForm()
+        changeableForm.resetForm()
     }
     
     private func showTopRightButton() {
         viewController.navigationItem.rightBarButtonItem = topRightBarButtonItem
     }
     
+    private func showTopLeftButton() {
+        viewController.navigationItem.leftBarButtonItem = topLeftBarButtonItem
+    }
+    
     private func hideTopRightButton() {
-        viewController.navigationItem.rightBarButtonItem = nil
+        viewController.navigationItem.rightBarButtonItem = startedTopRightButton
+    }
+    
+    private func hideTopLeftButton() {
+        viewController.navigationItem.leftBarButtonItem = startedTopLeftButton
     }
     
     private func updateTopRightButtonState() {
@@ -94,17 +103,6 @@ public class FormChangeWatcher<T: ChangeableForm, U: UIViewController> {
         topRightBarButtonItem.isEnabled = changeableForm.isValid()
     }
     
-    private func showTopLeftButton() {
-        viewController.navigationItem.leftBarButtonItem = topLeftBarButtonItem
-    }
-    
-    private func hideTopLeftButton() {
-        viewController.navigationItem.leftBarButtonItem = startedTopLeftButton
-    }
-    
-    private func createTopRightButtonItem() {
-        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: topRightButtonText, style: .done, target: self, action: #selector(resetValues))
-    }
 }
 
 public enum FormChangeWatcherTopRightButtonState {
